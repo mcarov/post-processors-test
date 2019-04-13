@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Component
 public class Processor implements BeanPostProcessor {
-    private final Map<Method, Object> cache = new HashMap<>();
+    private final Map<Integer, Object> cache = new HashMap<>();
     private final Map<String, Class> names = new HashMap<>();
 
     @Override
@@ -31,20 +31,21 @@ public class Processor implements BeanPostProcessor {
             return bean;
         }
 
-        var enhancer = new Enhancer();
+        Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(names.get(beanName));
         enhancer.setCallback(new MethodInterceptor() {
             @Override
             public Object intercept(Object o, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
-                if(!cache.containsKey(method)) {
+                Integer id = (Integer) args[0];
+                if(!cache.containsKey(id)) {
                     System.out.println("--> cache is emty");
-                    var result = methodProxy.invoke(bean, args);
-                    cache.put(method, result);
+                    Object result = methodProxy.invoke(bean, args);
+                    cache.put(id, result);
                     return result;
                 }
                 else {
                     System.out.println("--> cache request");
-                    return cache.get(method);
+                    return cache.get(id);
                 }
             }
         });

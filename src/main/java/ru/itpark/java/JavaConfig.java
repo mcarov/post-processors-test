@@ -12,7 +12,7 @@ import ru.itpark.app.Processor;
 public class JavaConfig {
     @Bean
     public static PropertyPlaceholderConfigurer configurer() {
-        var conf = new PropertyPlaceholderConfigurer();
+        PropertyPlaceholderConfigurer conf = new PropertyPlaceholderConfigurer();
         conf.setLocation(new ClassPathResource("connection.properties"));
         return conf;
     }
@@ -29,7 +29,7 @@ public class JavaConfig {
 
     @Bean("javaClient")
     public JavaRequestClient javaRequestClient(@Value("${url}") String url) {
-        var client = new JavaRequestClient();
+        JavaRequestClient client = new JavaRequestClient();
         client.setUrl(url);
         client.setGson(gson());
         return client;

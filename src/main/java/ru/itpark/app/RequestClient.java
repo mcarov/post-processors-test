@@ -1,4 +1,4 @@
-package ru.itpark;
+package ru.itpark.app;
 
 import com.google.gson.Gson;
 import ru.itpark.app.Post;

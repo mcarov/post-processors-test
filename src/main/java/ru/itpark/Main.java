@@ -18,39 +18,45 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         // XML config
         {
-            var context = new ClassPathXmlApplicationContext("beans.xml");
-            var bean = context.getBean("xmlClient", XmlRequestClient.class);
-            for (int i = 0; i < 2; i++) {
-                System.out.println(bean.getPost(100));
-                Thread.sleep(500);
-            }
+            ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+            XmlRequestClient bean = context.getBean("xmlClient", XmlRequestClient.class);
+            System.out.println(bean.getPost(100));
+            Thread.sleep(500);
+            System.out.println(bean.getPost(90));
+            Thread.sleep(500);
+            System.out.println(bean.getPost(100));
+            Thread.sleep(500);
         }
         // Java config
         {
-            var context = new AnnotationConfigApplicationContext(JavaConfig.class);
-            var bean = context.getBean("javaClient", JavaRequestClient.class);
-            for (int i = 0; i < 2; i++) {
-                System.out.println(bean.getPost(90));
-                Thread.sleep(500);
-            }
+            AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(JavaConfig.class);
+            JavaRequestClient bean = context.getBean("javaClient", JavaRequestClient.class);
+            System.out.println(bean.getPost(80));
+            Thread.sleep(500);
+            System.out.println(bean.getPost(70));
+            Thread.sleep(500);
+            System.out.println(bean.getPost(80));
+            Thread.sleep(500);
         }
         // Annotaion config
         {
-            var context = new AnnotationConfigApplicationContext();
+            AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
             context.registerBean(Gson.class);   // от класса Gson нельзя наследоваться (помечен как final)
             context.scan("ru.itpark.annotation", "ru.itpark.app");
             context.refresh();
-            var bean = context.getBean("annotationClient", AnnotationRequestClient.class);
-            for (int i = 0; i < 2; i++) {
-                System.out.println(bean.getPost(80));
-                Thread.sleep(500);
-            }
+            AnnotationRequestClient bean = context.getBean("annotationClient", AnnotationRequestClient.class);
+            System.out.println(bean.getPost(60));
+            Thread.sleep(500);
+            System.out.println(bean.getPost(50));
+            Thread.sleep(500);
+            System.out.println(bean.getPost(60));
+            Thread.sleep(500);
         }
         //Program config
         {
-            var context = new AnnotationConfigApplicationContext();
+            AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
             context.registerBean(PropertyPlaceholderConfigurer.class, () -> {
-                var conf = new PropertyPlaceholderConfigurer();
+                PropertyPlaceholderConfigurer conf = new PropertyPlaceholderConfigurer();
                 conf.setLocation(new ClassPathResource("connection.properties"));
                 return conf;
             });
@@ -58,20 +64,24 @@ public class Main {
             context.registerBean(Gson.class);
             context.registerBean("programClient", ProgramRequestClient.class);
             context.refresh();
-            var bean = context.getBean("programClient", ProgramRequestClient.class);
-            for (int i = 0; i < 2; i++) {
-                System.out.println(bean.getPost(70));
-                Thread.sleep(500);
-            }
+            ProgramRequestClient bean = context.getBean("programClient", ProgramRequestClient.class);
+            System.out.println(bean.getPost(40));
+            Thread.sleep(500);
+            System.out.println(bean.getPost(30));
+            Thread.sleep(500);
+            System.out.println(bean.getPost(30));
+            Thread.sleep(500);
         }
         // Groovy config
         {
-            var context = new GenericGroovyApplicationContext("beans.groovy");
-            var bean = context.getBean("groovyClient", GroovyRequestClient.class);
-            for (int i = 0; i < 2; i++) {
-                System.out.println(bean.getPost(60));
-                Thread.sleep(500);
-            }
+            GenericGroovyApplicationContext context = new GenericGroovyApplicationContext("beans.groovy");
+            GroovyRequestClient bean = context.getBean("groovyClient", GroovyRequestClient.class);
+            System.out.println(bean.getPost(20));
+            Thread.sleep(500);
+            System.out.println(bean.getPost(10));
+            Thread.sleep(500);
+            System.out.println(bean.getPost(10));
+            Thread.sleep(500);
         }
     }
 }
