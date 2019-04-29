@@ -8,12 +8,14 @@ import org.springframework.cglib.proxy.MethodProxy;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
 public class Processor implements BeanPostProcessor {
-    private final Map<Integer, Object> cache = new HashMap<>();
+    private final Map<List<Object>, Object> cache = new HashMap<>();
     private final Map<String, Class> names = new HashMap<>();
 
     @Override
@@ -36,16 +38,16 @@ public class Processor implements BeanPostProcessor {
         enhancer.setCallback(new MethodInterceptor() {
             @Override
             public Object intercept(Object o, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
-                Integer id = (Integer) args[0];
-                if(!cache.containsKey(id)) {
+                List<Object> argsList = Arrays.asList(args);
+                if(!cache.containsKey(argsList)) {
                     System.out.println("--> cache is emty");
                     Object result = methodProxy.invoke(bean, args);
-                    cache.put(id, result);
+                    cache.put(argsList, result);
                     return result;
                 }
                 else {
                     System.out.println("--> cache request");
-                    return cache.get(id);
+                    return cache.get(argsList);
                 }
             }
         });
